@@ -1,0 +1,6 @@
+---
+# handlers para reiniciar los servicios
+- name: Reiniciar MySQL
+  service:
+    name: mysql
+    state: restarted

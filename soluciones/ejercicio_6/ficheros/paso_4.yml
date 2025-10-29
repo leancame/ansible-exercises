@@ -1,0 +1,19 @@
+- name: Buscar archivos que comiencen con letras minúsculas
+  hosts: web
+  become: yes
+  tasks:
+    - name: Encontrar archivos que comiencen con letras minúsculas
+      find:
+        paths: /var/log # Ruta donde se buscarán los archivos
+        recurse: no # No buscar en subdirectorios
+        use_regex: yes # Utilizar expresiones regulares
+        patterns: '^[a-z]*_.*\.log' # Expresión regular donde cumplimos los requisitos
+      register: archivos_minusculas # Guardar los resultados en una variable
+
+    - name: Extraer nombres de archivos
+      set_fact:
+         nombres_archivos: "{{ archivos_minusculas.files | map(attribute='path') | map('basename') | list }}" # Extraer los nombres de los archivos
+
+    - name: Mostrar nombres de archivos encontrados
+      debug:
+        var: nombres_archivos # Mostrar los nombres de los archivos encontrados

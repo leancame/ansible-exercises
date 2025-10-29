@@ -1,0 +1,19 @@
+- name: Gestionar Servicios Web con Ansible
+  hosts: web
+  become: yes
+  vars:
+    web_service: # Servicio web a gestionar, lista de elementos
+    - apache2
+    - vsftpd  
+  tasks:
+    - name: Verificar si los servicios están activos # Verificar si los servicios están activos
+      service: # Verificar si los servicios están activos
+        name: "{{ item }}" # Servicio a verificar individual
+        state: started # Estado del servicio
+      loop: "{{ web_service }}" # Bucle para iterar sobre la lista de servicios
+      register: service_status # Registrar el resultado en una variable
+
+    - name: Mostrar el estado de los servicios
+      debug: 
+        msg: "El servicio {{ item.name }} está {{ item.state }}" # Mostrar el estado de cada servicio
+      loop: "{{ service_status.results }}" # Bucle para iterar sobre el resultado de la tarea anterior

@@ -1,0 +1,17 @@
+- name: Instalar paquetes desde Internet
+  hosts: web 
+  become: yes
+  tasks:
+    - name: Actualizar la lista de paquetes
+      apt: # Paquete de gestión de paquetes de Debian 
+        update_cache: yes # Actualiza la lista de paquetes
+
+    - name: Instalar htop
+      apt: # Comando en este caso usado para instalar paquetes
+        name: htop # Paquete a instalar
+        state: present # Estado del paquete (present, absent, latest)
+
+    - name: Instalar curl
+      apt: # Comando en este caso usado para instalar paquetes
+        name: curl # Paquete a instalar
+        state: present # Estado del paquete (present, absent, latest)

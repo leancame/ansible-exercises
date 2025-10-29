@@ -1,0 +1,17 @@
+- name: Facts personalizado
+  hosts: nodo1
+  gather_facts: no # No se recopilarán los hechos
+  tasks:
+    - name: Fecha y hora
+      command: date +"%Y-%m-%d %H:%M:%S"
+      register: fecha_actual
+
+    - name: Definir Facts Custom 
+      set_fact: # Definir una variable de Facts personalizada
+        ansible_facts: # Nombre de la variable de Facts
+          fecha_actual: "{{ fecha_actual.stdout }}" # Valor de la variable
+
+    - name: Ejecutar facts custom
+      debug: # Mostrar el valor de la variable de Facts personalizada
+        msg: # Mensaje a mostrar
+          - "Fecha y hora: {{ ansible_facts.fecha_actual }}"

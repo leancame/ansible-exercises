@@ -1,0 +1,2 @@
+- name: Ejecutar limpieza del sistema
+  import_playbook: limpiar_dependencias.yml

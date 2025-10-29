@@ -1,0 +1,19 @@
+- name: Verificar paquetes instalados
+  hosts: web
+  become: yes
+  vars:
+    paquetes:
+      - apache2
+      - vim
+      - nginx
+      - filebeat
+
+  tasks:
+    - name: Obtener información de los paquetes instalados
+      package_facts: # modulo a usar
+        manager: "auto" # Se utiliza el gestor de paquetes por defecto
+
+    - name: Verificar si los paquetes están instalados
+      debug:
+        msg: "El paquete {{ item }} está {{ 'instalado' if item in ansible_facts.packages else 'no instalado' }}" # mensaje a mostrar
+      loop: "{{ paquetes }}" # iterar sobre la lista de paquetes

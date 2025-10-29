@@ -1,0 +1,13 @@
+- name: Esperar a la eliminación de un archivo
+  hosts: web
+  become: yes
+  tasks:
+    - name: Esperar a que el archivo bloqueo.lock sea eliminado
+      wait_for: # Esperar a que el archivo bloqueo.lock sea eliminado
+        path: /home/lcarbajo/Escritorio/bloqueo.lock # Ruta del archivo
+        state: absent # Estado que se espera hasta que se elimine
+        timeout: 40 # Espera 40 segundo
+
+    - name: Mostrar mensaje de éxito
+      debug: # Mostrar mensaje de éxito
+        msg: "El archivo bloqueo.lock ha sido eliminado exitosamente" # Mensaje de éxito

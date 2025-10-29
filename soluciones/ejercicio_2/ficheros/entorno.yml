@@ -1,0 +1,17 @@
+- name: Desplegar aplicación # Nombre de la aplicación
+  hosts: all # Hosts que se van a conectar
+  vars_prompt: # Variables que se van a solicitar
+    - name: "entorno" # Nombre
+      prompt: "Introduce el entorno de despliegue (dev, pre, pro)" # Mensaje de ayuda
+      private: no # Si se debe ocultar la respuesta
+
+  tasks:
+    - name: Cargar variables del entorno # Nombre de la tarea
+      include_vars: "{{ entorno }}.yml" # Archivo de variables a cargar
+
+    - name: Mostrar variables cargadas # Nombre de la tarea
+      debug: # Nombre de la acción
+        msg: # Mensaje a mostrar
+          - "Entorno: {{ entorno }}"
+          - "DB Host: {{ db_host }}"
+          - "DB User: {{ db_user }}"

@@ -1,0 +1,14 @@
+- name: Instalar y iniciar Apache2
+  hosts: web
+  become: yes
+  tasks:
+    - name: Instalar el paquete apache2
+      apt: # Instalar paquete
+        name: apache2
+        state: present
+
+    - name: Iniciar el servicio de Apache2
+      service: # Iniciar servicio
+        name: apache2
+        state: started # Iniciar el servicio
+        enabled: yes # Habilitar el servicio para que se inicie automáticamente al iniciar el sistema

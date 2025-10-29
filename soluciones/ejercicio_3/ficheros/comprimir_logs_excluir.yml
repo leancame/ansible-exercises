@@ -1,0 +1,26 @@
+- name: Buscar y comprimir archivos de logs # Nombre de la tarea
+  hosts: nodo1 # Host donde se ejecutará la tarea
+  become: yes # Permisos de superusuario
+  vars: # Variables para la tarea
+    logs_directorios: # Directorios de logs a buscar
+      - /apps/tomcat/logs 
+      - /var/log/tomcat
+    excluidos: "access.*\\.txt" # Archivos de logs a excluir 
+    archivo_comprimidos: /apps/comprimido_logs.tar.gz # Archivo de logs comprimido
+  tasks: # Tareas a ejecutar
+    - name: Buscar todos los archivos en las carpetas {{ logs_directorios }} # Buscar archivos de logs
+      find: # Módulo para buscar archivos
+        paths: "{{ logs_directorios }}" # Directorios a buscar
+        recurse: yes # Buscar en subdirectorios
+        patterns: "*"  # Buscar todos los archivos
+      register: logs_encontrados # Guardar los resultados en una variable
+
+    - name: Excluir archivos que tengan la palabra 'access' y sean de extensión '.txt' # Excluir archivos de logs
+      set_fact: # Módulo para establecer una variable
+        logs_filtrados: "{{ logs_encontrados.files | rejectattr('path', 'search', excluidos) | list }}" # Filtrar los archivos
+
+    - name: Comprimir los archivos encontrados en un solo archivo # Comprimir archivos de logs
+      archive: # Módulo para comprimir archivos
+        path: "{{ logs_filtrados | map(attribute='path') | list }}" # Archivos a comprimir
+        dest: "{{ archivo_comprimidos }}" # Archivo de logs comprimido
+        format: gz # Formato de compresión

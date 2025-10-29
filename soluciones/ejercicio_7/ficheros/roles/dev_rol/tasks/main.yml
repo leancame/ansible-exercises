@@ -1,0 +1,12 @@
+---
+# tasks para el dev
+- name: Ensure Git is installed
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+
+- name: Clone the repository
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ dev_repo_path }}"

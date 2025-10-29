@@ -1,0 +1,13 @@
+- name: Verificar paquetes instalados
+  hosts: web
+  become: yes
+  tasks:
+    - name: Búsqueda archivos 
+      find:
+        path: / # Busca en la raíz del sistema
+        recurse: yes # Busca en subdirectorios
+        size: 100M # Busca archivos mayores a 100MB
+      register: archivos # Almacena los resultados en una variable
+    - name: Mostrar archivos encontrados 
+      debug: # Muestra los resultados en pantalla
+        var: archivos.files # Muestra la lista de archivos encontrados

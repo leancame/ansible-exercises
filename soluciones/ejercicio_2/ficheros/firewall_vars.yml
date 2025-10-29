@@ -1,0 +1,16 @@
+# Define las variables necesarias para configurar el firewall, como servicios, puertos, direcciones IP y zonas.
+
+# Servicios
+service: https
+
+#Puertos tcp
+tcp: 8081/tcp 
+
+#Puertos udp
+udp: 161-162/udp
+
+# Zona
+zona: internal
+
+# IP
+ip: 192.168.20.0/24

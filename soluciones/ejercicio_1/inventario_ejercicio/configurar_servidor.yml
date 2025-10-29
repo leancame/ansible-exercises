@@ -1,0 +1,19 @@
+---
+- name: Configurar servidor web en nodo1 # Configurar servidor web en nodo1
+  hosts: webservers # Seleccionar grupo de nodos  
+  become: yes # Permitir ejecutar comandos con privilegios de superusuario
+  tasks: # Definir tareas a ejecutar
+    - name: Verificar conectividad con el nodo (ping) # Verificar conectividad con el nodo (ping)
+      ansible.builtin.ping: # Utilizar modulo ping
+
+    - name: Instalar Apache2 # Instalar Apache2
+      ansible.builtin.apt: # Utilizar modulo apt
+        name: apache2 # Nombre del paquete a instalar
+        state: present # Estado deseado del paquete (presente o ausente)
+        update_cache: true # Actualizar cache de paquetes antes de instalar
+
+    - name: Comprobar que Apache2 está en funcionamiento # Comprobar que Apache2 está en funcionamiento
+      ansible.builtin.service: # Utilizar modulo service
+        name: apache2 # Nombre del servicio a comprobar
+        state: started # Estado deseado del servicio (iniciado o detenido)
+        enabled: true # Habilitar el servicio para que se inicie automáticamente al arrancar el sistema

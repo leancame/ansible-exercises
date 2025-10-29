@@ -1,0 +1,8 @@
+- name: Comprimir el directorio /apps/tomcat
+  hosts: all
+  tasks:
+    - name: Comprimir el directorio /apps/tomcat en un archivo .gz # Nombre de la tarea
+      archive: # Nombre del módulo a usar 
+        path: /apps/tomcat # Ruta del directorio a comprimir
+        dest: /apps/tomcat_comprimido.tar.gz # Ruta del archivo de salida
+        format: gz # Formato de compresión a usar (gz, bz2, etc.)

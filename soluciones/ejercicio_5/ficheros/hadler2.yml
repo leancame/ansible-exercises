@@ -1,0 +1,28 @@
+- name: Instalar, iniciar Apache2 y Handler
+  hosts: web
+  become: yes
+  tasks:
+    - name: Instalar el paquete apache2
+      apt:
+        name: apache2
+        state: present
+
+    - name: Iniciar el servicio de Apache2
+      service:
+        name: apache2 # nombre del servicio
+        state: started # estado del servicio
+        enabled: yes # Para que se ejecute al iniciar el sistema
+
+    - name: Modificar configuración de Apache2
+      copy: # copiar archivo de configuración
+        src: /home/lcarbajo/Escritorio/apache2.conf # ruta del archivo a copiar
+        dest: /etc/apache2/apache2.conf # ruta del archivo destino
+        remote_src: yes # indica que el archivo a copiar está en un servidor remoto
+      notify: Reiniciar el servicio de Apache2 # indica que se debe reiniciar el servicio después de realizar la tarea
+
+  handlers: # Manejadores de eventos
+    - name: Reiniciar el servicio de Apache2
+      service: # El servicio que se va a reiniciar
+        name: apache2 # nombre del servicio
+        state: restarted # estado del servicio
+

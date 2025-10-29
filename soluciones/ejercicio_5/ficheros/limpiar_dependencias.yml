@@ -1,0 +1,13 @@
+- name: Limpiar dependencias y caché del sistema
+  hosts: web
+  become: yes
+  tasks:
+    - name: Limpiar paquetes no necesarios
+      apt: # Instalar paquetes
+        autoremove: yes # Eliminar paquetes no necesarios
+        autoclean: yes # Eliminar paquetes no necesarios y limpiar el caché
+        update_cache: yes # Actualizar el caché de paquetes
+
+    - name: Limpiar caché de apt # Eliminar el caché de apt
+      command: apt-get clean # Eliminar el caché de apt
+      

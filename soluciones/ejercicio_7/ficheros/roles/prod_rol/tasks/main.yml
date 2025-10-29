@@ -1,0 +1,12 @@
+---
+# tasks para producción
+- name: Ensure Nginx is installed
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Create the index.html file
+  copy:
+    content: "{{ welcome_message }}"
+    dest: "{{ nginx_index_path }}"

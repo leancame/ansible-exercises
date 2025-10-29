@@ -1,0 +1,12 @@
+- name: Comprimir el directorio /apps/tomcat
+  hosts: all
+  become: yes
+  vars: # Creación de variables con las rutas
+    ruta: /apps/tomcat 
+    dest: /apps/tomcat_comprimido2.tar.gz
+  tasks:
+    - name: Comprimir el directorio /apps/tomcat en un archivo .gz # Nombre de la tarea
+      archive: # Nombre del módulo a usar 
+        path: "{{ ruta }}"
+        dest: "{{ dest }}"
+        format: gz # Formato de compresión a usar (gz, bz2, etc.)

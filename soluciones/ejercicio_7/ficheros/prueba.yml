@@ -1,0 +1,50 @@
+- hosts: dev
+  become: yes
+  tasks:
+    # Tarea para ejecutar el rol de desarrollo en los hosts de desarrollo
+    - name: Ejecutar el rol de desarrollo
+      include_role:
+        name: dev_rol  # Especifica el rol a incluir
+      register: dev_result  # Registra el resultado de la ejecución del rol en la variable dev_result
+
+    # Tarea para establecer el resultado del rol como una variable global
+    - name: Establecer resultado del rol de desarrollo como global
+      set_fact:
+        dev_result_global: >  # Define una variable global basada en el resultado del rol
+          {{
+            dev_result |  # Toma el resultado registrado
+            combine({'failed': dev_result is failed}) |  # Combina con un indicador de fallo
+            default({'failed': true})  # Si no hay resultado, marca como fallo
+          }}
+
+    # Tarea para agregar la variable global a los datos del host localhost
+    - name: Guardar resultado global en localhost
+      add_host:
+        name: "localhost"  # Especifica localhost como el host de destino
+        dev_result_global: "{{ dev_result_global }}"  # Asigna la variable global al host
+
+    # Tarea para depurar y mostrar el valor de la variable global
+    - name: Depurar resultado global
+      debug:
+        var: dev_result_global  # Muestra el contenido de dev_result_global para propósitos de depuración
+
+    # Tarea para verificar si el rol de desarrollo falló y generar un error si es necesario
+    - name: Verificar éxito del rol de desarrollo
+      fail:
+        msg: "El rol dev_rol falló."  # Mensaje de error si el rol falló
+      when: dev_result_global.failed  # Condición para fallar si el resultado indica fallo
+
+- hosts: prod
+  become: yes
+  tasks:
+    # Tarea para depurar el resultado global desde el host localhost
+    - name: Verificar resultado global
+      debug:
+        var: hostvars['localhost']['dev_result_global']  # Muestra el valor del resultado global del host localhost
+
+    # Tarea para ejecutar el rol de producción solo si el rol de desarrollo no falló
+    - name: Ejecutar el rol de producción
+      include_role:
+        name: prod_rol  # Especifica el rol de producción a ejecutar
+      when: not hostvars['localhost']['dev_result_global']['failed']  # Condición para ejecutar solo si el resultado global no indica fallo
+

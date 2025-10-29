@@ -1,0 +1,26 @@
+- name: Configurar firewall
+  hosts: web
+  vars_files:
+    - firewall_vars.yml
+  become: yes
+  tasks:
+    - firewalld:
+        service: "{{ service }}"
+        permanent: true
+        state: enabled
+
+    - firewalld:
+        port: "{{ tcp }}"
+        permanent: true
+        state: disabled
+
+    - firewalld:
+        port: "{{ udp }}"
+        permanent: true
+        state: disabled
+
+    - firewalld:
+        source: "{{ ip }}"
+        zone: "{{ zona }}"
+        state: enabled
+        permanent: true

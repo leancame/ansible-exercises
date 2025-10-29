@@ -1,0 +1,16 @@
+- name: Obtener información del sistema # Nombre del comando
+  hosts: all # Hosts que se van a ejecutar el comando
+  gather_facts: yes # Recopilar información del sistema
+
+  tasks: # Tareas
+    - name: Obtener el sistema operativo
+      debug: # Mostrar información en pantalla
+        msg: "OS Family: {{ ansible_os_family }}" # Mensaje a mostrar
+
+    - name: Obtener el nombre de host 
+      debug: # Mostrar información en pantalla
+        msg: "Hostname: {{ ansible_hostname }}" # Mensaje a mostrar
+
+    - name: Obtener la dirección IPv4
+      debug: # Mostrar información en pantalla
+        msg: "IPv4: {{ ansible_default_ipv4.address }}" # Mensaje a mostrar

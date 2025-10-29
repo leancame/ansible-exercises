@@ -1,0 +1,29 @@
+- name: ejercicio # nombre del ejercicio
+  hosts: web # nombre del grupo de hosts
+  become: yes # permisos de superusuario
+  tasks: # lista de tareas a realizar
+    - name: instala git en ubuntu 
+      block: # bloque de tareas
+        - apt: # tarea de instalación de paquetes
+            name: git # nombre del paquete a instalar
+            state: present # estado del paquete (presente o ausente)
+      rescue: # bloque de tareas de rescate
+        - name: manejar error en ubuntu 
+          debug: # tarea de depuración
+            msg: "Error al instalar git en Ubuntu" # mensaje de error
+      always: # bloque de tareas siempre que se ejecute la tarea
+        - name: siempre ejecutado en ubuntu
+          debug: # tarea de depuración
+            msg: "Intento de instalación de git en Ubuntu completado" # mensaje de depuración
+
+    - name: intenta leer un archivo en una ruta inexistente
+      block: # bloque de tareas
+        - command: cat /ruta/inexistente/archivo.txt # tarea de lectura de archivo inexistente 
+      rescue: # bloque de tareas de rescate
+        - name: manejar error en centos
+          debug: # tarea de depuración
+            msg: "Error al intentar leer el archivo en CentOS" # mensaje de error
+      always: # bloque de tareas siempre que se ejecute la tarea
+        - name: siempre ejecutado en centos 
+          debug: # tarea de depuración
+            msg: "Intento de lectura del archivo en CentOS completado" # mensaje de depuración

@@ -1,0 +1,2 @@
+- name: Importar playbook de instalación y arranque de Apache2
+  import_playbook: instalacion_apache.yml # nombre del archivo de playbook a importar

@@ -1,0 +1,43 @@
+# Instalar paquetes de MySQL
+- name: Instalar paquetes de MySQL  # Nombre de la tarea para instalar los paquetes necesarios de MySQL.
+  apt:  # Módulo utilizado para gestionar paquetes en sistemas basados en Debian/Ubuntu.
+    name: "{{ item }}"  # Especifica el paquete a instalar. Será iterado por cada elemento en el loop.
+    state: present  # Asegura que los paquetes estén instalados (presentes en el sistema).
+  loop:  # Itera sobre los siguientes paquetes:
+    - mysql-server  # Paquete principal del servidor MySQL.
+    - mysql-client  # Paquete para interactuar con el servidor MySQL desde la línea de comandos.
+    - python3-mysqldb  # Librería de Python para interactuar con MySQL.
+  become: true  # Escala privilegios para ejecutar la tarea como superusuario.
+
+# Iniciar y habilitar el servicio MySQL
+- name: Iniciar y habilitar el servicio MySQL  # Nombre de la tarea para gestionar el servicio MySQL.
+  service:  # Módulo utilizado para gestionar servicios en el sistema.
+    name: mysql  # Especifica el servicio que se va a gestionar (MySQL).
+    state: started  # Asegura que el servicio esté en ejecución.
+    enabled: true  # Asegura que el servicio se habilite para iniciarse automáticamente al arrancar el sistema.
+
+# Configurar la contraseña del usuario root
+- name: Configurar la contraseña del usuario root  # Nombre de la tarea para establecer la contraseña del usuario root.
+  command: >  # Usa el módulo `command` para ejecutar un comando de shell.
+    mysqladmin -u root password "{{ mysql_root_password }}"  # Comando para establecer la contraseña de root.
+  args:  # Argumentos adicionales para el comando.
+    creates: /root/.mysql_password_set  # Este archivo actúa como marcador para evitar que la tarea se ejecute repetidamente.
+  become: true  # Escala privilegios para ejecutar la tarea como superusuario.
+
+# Crear las bases de datos
+- name: Crear bases de datos  # Nombre de la tarea para crear las bases de datos.
+  mysql_db:  # Módulo utilizado para gestionar bases de datos en MySQL.
+    name: "{{ item.name }}"  # Nombre de la base de datos que se va a crear, tomada de una lista de datos.
+    state: present  # Asegura que la base de datos esté presente (creada si no existe).
+  loop: "{{ mysql_databases }}"  # Itera sobre la lista de bases de datos definida en las variables.
+  become: true  # Escala privilegios para ejecutar la tarea como superusuario.
+
+# Crear los usuarios
+- name: Crear usuarios de MySQL  # Nombre de la tarea para crear usuarios de MySQL.
+  mysql_user:  # Módulo utilizado para gestionar usuarios en MySQL.
+    name: "{{ item.name }}"  # Nombre del usuario a crear, tomado de una lista de datos.
+    password: "{{ item.password }}"  # Contraseña del usuario.
+    priv: "{{ item.priv }}"  # Privilegios asignados al usuario en formato "base_de_datos.tabla:privilegios".
+    state: present  # Asegura que el usuario esté presente (creado si no existe).
+  loop: "{{ mysql_users }}"  # Itera sobre la lista de usuarios definida en las variables.
+  become: true  # Escala privilegios para ejecutar la tarea como superusuario.

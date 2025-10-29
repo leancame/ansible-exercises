@@ -1,0 +1,8 @@
+---
+mysql_root_password: "RootSecure123!"
+mysql_databases:
+  - name: employee_db
+mysql_users:
+  - name: hr_user
+    password: "HRUserPass123!"
+    priv: "employee_db.*:ALL"

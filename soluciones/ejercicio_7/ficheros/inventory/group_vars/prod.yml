@@ -1,0 +1,2 @@
+welcome_message: "<html><body><h1>Welcome to Production!</h1></body></html>"
+nginx_index_path: "/var/www/html/index.html"

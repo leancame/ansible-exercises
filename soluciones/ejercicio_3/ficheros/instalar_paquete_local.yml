@@ -1,0 +1,8 @@
+- name: Instalar Google Chrome desde archivo .deb
+  hosts: web
+  become: yes 
+  tasks:
+    - name: Instalar Google Chrome
+      apt: # Instalar paquete
+        deb: /home/lcarbajo/Escritorio/google_chrome.deb # Ruta del archivo .deb
+        state: present # Estado del paquete
